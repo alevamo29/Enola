@@ -1,371 +1,1180 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>Pour Enola ❤️</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
 
-<style>
+    <meta name="theme-color" content="#050505">
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+    <title>Pour Enola ❤️</title>
 
-body{
-    background:#000;
-    color:#d4af37;
-    font-family:Georgia, serif;
-    overflow:hidden;
-}
+    <style>
+        :root {
+            --black: #050505;
+            --black-soft: #101010;
+            --gold: #d4af37;
+            --gold-light: #f2dc8c;
+            --cream: #fff9e8;
+            --white: #ffffff;
+            --shadow: rgba(212, 175, 55, 0.28);
+        }
 
-.screen{
-    position:absolute;
-    width:100%;
-    height:100%;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    text-align:center;
-    padding:30px;
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-.screen.active{
-    display:flex;
-}
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            background: var(--black);
+        }
 
-h1{
-    font-size:3rem;
-    margin-bottom:20px;
-}
+        body {
+            color: var(--cream);
+            font-family: Georgia, "Times New Roman", serif;
+            overflow: hidden;
+        }
 
-p{
-    font-size:1.3rem;
-    max-width:900px;
-    line-height:1.8;
-}
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(
+                    circle at 50% 20%,
+                    rgba(212, 175, 55, 0.10),
+                    transparent 34%
+                ),
+                radial-gradient(
+                    circle at 50% 100%,
+                    rgba(212, 175, 55, 0.07),
+                    transparent 36%
+                ),
+                linear-gradient(
+                    160deg,
+                    #040404 0%,
+                    #111111 50%,
+                    #030303 100%
+                );
+        }
 
-button{
-    margin-top:30px;
-    background:#d4af37;
-    color:black;
-    border:none;
-    padding:16px 40px;
-    border-radius:50px;
-    font-size:18px;
-    cursor:pointer;
-    transition:.3s;
-}
+        .gold-particle {
+            position: fixed;
+            z-index: 1;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0.45;
+            pointer-events: none;
+            animation: floatParticle linear infinite;
+        }
 
-button:hover{
-    transform:scale(1.05);
-}
+        @keyframes floatParticle {
+            from {
+                transform: translateY(105vh) scale(0.6);
+                opacity: 0;
+            }
 
-img{
-    max-width:85%;
-    max-height:60vh;
-    border-radius:20px;
-    margin-bottom:25px;
-    box-shadow:0 0 30px rgba(212,175,55,.4);
-}
+            20% {
+                opacity: 0.5;
+            }
 
-#counter{
-    font-size:2rem;
-    line-height:2;
-}
+            80% {
+                opacity: 0.35;
+            }
 
-.gold{
-    color:#d4af37;
-}
+            to {
+                transform: translateY(-15vh) scale(1.2);
+                opacity: 0;
+            }
+        }
 
-audio{
-    display:none;
-}
+        #app {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
 
-</style>
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding:
+                max(28px, env(safe-area-inset-top))
+                22px
+                max(28px, env(safe-area-inset-bottom));
+            overflow-y: auto;
+            visibility: hidden;
+            opacity: 0;
+            transform: scale(1.025);
+            pointer-events: none;
+            transition:
+                opacity 0.7s ease,
+                transform 0.7s ease,
+                visibility 0.7s;
+        }
+
+        .screen.active {
+            visibility: visible;
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .content {
+            width: min(920px, 100%);
+            margin: auto;
+            text-align: center;
+        }
+
+        .eyebrow {
+            margin-bottom: 15px;
+            color: var(--gold-light);
+            font-size: 0.78rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: var(--gold-light);
+            font-size: clamp(2.4rem, 9vw, 5rem);
+            font-weight: 400;
+            line-height: 1.08;
+            text-shadow: 0 0 28px rgba(212, 175, 55, 0.22);
+        }
+
+        h2 {
+            margin-bottom: 18px;
+            color: var(--gold-light);
+            font-size: clamp(1.8rem, 6.5vw, 3.4rem);
+            font-weight: 400;
+            line-height: 1.18;
+        }
+
+        p {
+            max-width: 760px;
+            margin: 0 auto;
+            color: var(--cream);
+            font-size: clamp(1.05rem, 3.8vw, 1.35rem);
+            line-height: 1.8;
+        }
+
+        .highlight {
+            color: var(--gold-light);
+            font-style: italic;
+        }
+
+        .small-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            opacity: 0.75;
+        }
+
+        .divider {
+            width: 90px;
+            height: 1px;
+            margin: 23px auto;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--gold),
+                transparent
+            );
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 180px;
+            margin-top: 30px;
+            padding: 15px 34px;
+            border: 1px solid var(--gold);
+            border-radius: 999px;
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--gold-light),
+                    var(--gold)
+                );
+            box-shadow:
+                0 10px 35px rgba(212, 175, 55, 0.18),
+                inset 0 1px 0 rgba(255, 255, 255, 0.45);
+            color: #111111;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease,
+                filter 0.25s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .button:hover {
+            transform: translateY(-2px) scale(1.025);
+            box-shadow: 0 14px 40px rgba(212, 175, 55, 0.30);
+            filter: brightness(1.04);
+        }
+
+        .button:active {
+            transform: scale(0.98);
+        }
+
+        .photo-frame {
+            position: relative;
+            width: min(680px, 100%);
+            margin: 0 auto 25px;
+            padding: 5px;
+            border: 1px solid rgba(212, 175, 55, 0.55);
+            border-radius: 22px;
+            background: rgba(212, 175, 55, 0.06);
+            box-shadow:
+                0 22px 70px rgba(0, 0, 0, 0.52),
+                0 0 38px var(--shadow);
+        }
+
+        .photo-frame::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            z-index: -1;
+            border-radius: 22px;
+            background: linear-gradient(
+                135deg,
+                rgba(242, 220, 140, 0.70),
+                transparent 38%,
+                transparent 62%,
+                rgba(212, 175, 55, 0.52)
+            );
+        }
+
+        .photo-frame img {
+            display: block;
+            width: 100%;
+            max-height: 48vh;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 17px;
+        }
+
+        .photo-pair {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            width: min(850px, 100%);
+            margin: 0 auto 24px;
+        }
+
+        .photo-pair .photo-frame {
+            width: 100%;
+            margin: 0;
+        }
+
+        .photo-pair img {
+            height: min(43vh, 480px);
+            max-height: none;
+        }
+
+        .question-box {
+            width: min(760px, 100%);
+            margin: 0 auto;
+            padding: clamp(28px, 7vw, 56px) clamp(20px, 6vw, 50px);
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            border-radius: 28px;
+            background: rgba(10, 10, 10, 0.70);
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.55),
+                inset 0 0 45px rgba(212, 175, 55, 0.04);
+            backdrop-filter: blur(6px);
+        }
+
+        .question-main {
+            margin-top: 24px;
+            color: var(--gold-light);
+            font-size: clamp(1.55rem, 5.5vw, 2.55rem);
+            font-style: italic;
+            line-height: 1.45;
+        }
+
+        .celebration-photo img {
+            max-height: 42vh;
+        }
+
+        .date-card {
+            width: min(620px, 100%);
+            margin: 25px auto 0;
+            padding: 22px 18px;
+            border: 1px solid rgba(212, 175, 55, 0.38);
+            border-radius: 18px;
+            background: rgba(212, 175, 55, 0.055);
+        }
+
+        #acceptanceDate {
+            color: var(--gold-light);
+            font-size: clamp(1rem, 4vw, 1.25rem);
+            line-height: 1.7;
+        }
+
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            width: min(780px, 100%);
+            margin: 28px auto 0;
+        }
+
+        .counter-unit {
+            min-width: 0;
+            padding: 20px 8px;
+            border: 1px solid rgba(212, 175, 55, 0.32);
+            border-radius: 18px;
+            background: rgba(212, 175, 55, 0.055);
+            box-shadow: inset 0 0 24px rgba(212, 175, 55, 0.03);
+        }
+
+        .counter-number {
+            display: block;
+            color: var(--gold-light);
+            font-size: clamp(1.6rem, 7vw, 3rem);
+            line-height: 1;
+        }
+
+        .counter-label {
+            display: block;
+            margin-top: 10px;
+            color: rgba(255, 249, 232, 0.72);
+            font-size: clamp(0.67rem, 2.8vw, 0.88rem);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        #musicButton {
+            position: fixed;
+            top: max(16px, env(safe-area-inset-top));
+            right: 16px;
+            z-index: 20;
+            width: 46px;
+            height: 46px;
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            border-radius: 50%;
+            background: rgba(5, 5, 5, 0.68);
+            color: var(--gold-light);
+            font-size: 1.05rem;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition:
+                opacity 0.35s ease,
+                transform 0.25s ease;
+            backdrop-filter: blur(7px);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #musicButton.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #musicButton:hover {
+            transform: scale(1.08);
+        }
+
+        #confettiCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .fade-up {
+            animation: fadeUp 1s both;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.45s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.7s;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .screen {
+                align-items: flex-start;
+            }
+
+            .content {
+                padding-top: 24px;
+                padding-bottom: 24px;
+            }
+
+            .photo-pair {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .photo-pair img {
+                height: 33vh;
+            }
+
+            .counter-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 390px) {
+            .photo-pair {
+                grid-template-columns: 1fr;
+            }
+
+            .photo-pair img {
+                height: 28vh;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
-
-<audio id="music" loop>
-    musica.mp3
-</audio>
-
-
-<!-- ECRAN 1 -->
-
-<div class="screen active" id="screen1">
-
-<h1>Pour Enola ❤️</h1>
-
-<p>
-J'ai quelque chose d'important à te dire...
-</p>
-
-<button onclick="nextScreen(2)">
-Continuer
-</button>
-
-</div>
-
-
-<!-- ECRAN 2 -->
-
-<div class="screen" id="screen2">
-
-Photo1.jpeg
-
-<p>
-Hay personas que llegan a nuestra vida sin avisar...
-<br><br>
-Y poco a poco se convierten en una parte esencial de ella.
-</p>
-
-<button onclick="nextScreen(3)">
-Continuer
-</button>
-
-</div>
-
-
-<!-- ECRAN 3 -->
-
-<div class="screen" id="screen3">
-
-Photo5.jpeg
-
-<p>
-Depuis que je te connais,
-chaque moment partagé est devenu un souvenir précieux.
-</p>
-
-<button onclick="nextScreen(4)">
-Continuer
-</button>
-
-</div>
-
-
-<!-- ECRAN 4 -->
-
-<div class="screen" id="screen4">
-
-Photo4.jpeg
-
-<p>
-Chaque sourire.
-<br>
-Chaque conversation.
-<br>
-Chaque instant passé ensemble.
-</p>
-
-<button onclick="nextScreen(5)">
-Continuer
-</button>
-
-</div>
-
-
-<!-- QUESTION -->
-
-<div class="screen" id="screen5">
-
-<h1>Enola ❤️</h1>
-
-<p>
-J'aimerais être ton petit ami.
-<br><br>
-Et j'aimerais que tu sois ma petite amie.
-<br><br>
-
-<b>
-Voudrais-tu écrire une histoire avec moi ?
-</b>
-
-</p>
-
-<button onclick="accepted()">
-Oui ❤️
-</button>
-
-</div>
-
-
-<!-- CELEBRATION -->
-
-<div class="screen" id="screen6">
-
-Photo3.jpeg
-
-<h1>❤️ Elle a dit Oui ❤️</h1>
-
-<p>
-Le plus beau chapitre commence aujourd'hui.
-</p>
-
-</div>
-
-
-<!-- COMPTEUR -->
-
-<div class="screen" id="screen7">
-
-<h1>Notre histoire ❤️</h1>
-
-<p id="counter"></p>
-
-</div>
-
-
-
-<script>
-
-function nextScreen(number){
-
-document.querySelectorAll(".screen")
-.forEach(s=>s.classList.remove("active"));
-
-document.getElementById("screen"+number)
-.classList.add("active");
-
-}
-
-/* ACCEPTATION */
-
-function accepted(){
-
-const music=document.getElementById("music");
-
-music.play();
-
-if(!localStorage.getItem("enolaStart")){
-    localStorage.setItem(
-        "enolaStart",
-        Date.now()
-    );
-}
-
-nextScreen(6);
-
-createConfetti();
-
-setTimeout(()=>{
-
-nextScreen(7);
-startCounter();
-
-},4000);
-
-}
-
-
-
-/* COMPTEUR */
-
-function startCounter(){
-
-setInterval(()=>{
-
-const start=
-Number(localStorage.getItem("enolaStart"));
-
-const now=Date.now();
-
-let diff=Math.floor((now-start)/1000);
-
-const days=Math.floor(diff/86400);
-
-diff%=86400;
-
-const hours=Math.floor(diff/3600);
-
-diff%=3600;
-
-const minutes=Math.floor(diff/60);
-
-const seconds=diff%60;
-
-document.getElementById("counter").innerHTML=
-`
-Nous sommes ensemble depuis :
-
-<br><br>
-
-${days} jours
-<br>
-
-${hours} heures
-<br>
-
-${minutes} minutes
-<br>
-
-${seconds} secondes
-
-`;
-
-},1000);
-
-}
-
-
-
-/* CONFETTIS */
-
-function createConfetti(){
-
-for(let i=0;i<150;i++){
-
-let conf=document.createElement("div");
-
-conf.style.position="fixed";
-conf.style.left=Math.random()*100+"vw";
-conf.style.top="-10px";
-
-conf.style.width="10px";
-conf.style.height="10px";
-
-conf.style.background=
-Math.random()>0.5
-?
-"#d4af37"
-:
-"#ffffff";
-
-conf.style.zIndex="999";
-
-document.body.appendChild(conf);
-
-let fall=Math.random()*3000+2000;
-
-conf.animate([
-{
-transform:"translateY(0px)"
-},
-{
-transform:"translateY(120vh)"
-}
-],
-{
-duration:fall
-});
-
-setTimeout(()=>{
-
-conf.remove();
-
-},fall);
-
-}
-
-}
-
-</script>
-
+    <audio id="music" preload="auto" loop>
+        musica.mp3
+        Votre navigateur ne peut pas lire ce fichier audio.
+    </audio>
+
+    <button
+        id="musicButton"
+        type="button"
+        aria-label="Activer ou couper la musique"
+        title="Musique"
+    >
+        ♪
+    </button>
+
+    <canvas id="confettiCanvas"></canvas>
+
+    <main id="app">
+        <!-- ÉCRAN 1 -->
+        <section class="screen active" id="screen1">
+            <div class="content">
+                <div class="eyebrow fade-up">
+                    Une petite surprise
+                </div>
+
+                <h1 class="fade-up delay-1">
+                    Pour Enola ❤️
+                </h1>
+
+                <div class="divider fade-up delay-2"></div>
+
+                <p class="fade-up delay-2">
+                    J'ai quelque chose d'important à te dire...
+                </p>
+
+                <button
+                    class="button fade-up delay-3"
+                    type="button"
+                    onclick="beginExperience()"
+                >
+                    Commencer
+                </button>
+            </div>
+        </section>
+
+        <!-- ÉCRAN 2 -->
+        <section class="screen" id="screen2">
+            <div class="content">
+                <div class="photo-frame">
+                    Photo1.jpeg
+                </div>
+
+                <p>
+                    Hay personas que llegan a nuestra vida sin avisar...
+                    <br><br>
+                    Y poco a poco se convierten en una parte esencial de ella.
+                </p>
+
+                <button
+                    class="button"
+                    type="button"
+                    onclick="showScreen(3)"
+                >
+                    Continuer
+                </button>
+            </div>
+        </section>
+
+        <!-- ÉCRAN 3 -->
+        <section class="screen" id="screen3">
+            <div class="content">
+                <div class="photo-pair">
+                    <div class="photo-frame">
+                        Photo5.jpeg
+                    </div>
+
+                    <div class="photo-frame">
+                        Photo4.jpeg
+                    </div>
+                </div>
+
+                <p>
+                    Depuis que je te connais, chaque moment partagé
+                    est devenu un souvenir précieux.
+                    <br><br>
+                    Chaque sourire. Chaque conversation.
+                    Chaque instant passé ensemble.
+                </p>
+
+                <button
+                    class="button"
+                    type="button"
+                    onclick="showScreen(4)"
+                >
+                    Continuer
+                </button>
+            </div>
+        </section>
+
+        <!-- ÉCRAN 4 : QUESTION -->
+        <section class="screen" id="screen4">
+            <div class="content">
+                <div class="question-box">
+                    <div class="eyebrow">
+                        Une question importante
+                    </div>
+
+                    <h2>
+                        Enola ❤️
+                    </h2>
+
+                    <p>
+                        J'aimerais être ton petit ami,
+                        et j'aimerais que tu sois ma petite amie.
+                    </p>
+
+                    <div class="divider"></div>
+
+                    <p class="question-main">
+                        Voudrais-tu écrire une histoire avec moi ?
+                    </p>
+
+                    <button
+                        class="button"
+                        type="button"
+                        onclick="acceptProposal()"
+                    >
+                        Oui, je le veux ❤️
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ÉCRAN 5 : CÉLÉBRATION -->
+        <section class="screen" id="screen5">
+            <div class="content">
+                <div class="photo-frame celebration-photo">
+                    Photo3.jpeg
+                </div>
+
+                <h2>
+                    Elle a dit oui ❤️
+                </h2>
+
+                <p class="highlight">
+                    Le plus beau chapitre commence aujourd'hui.
+                </p>
+
+                <div class="date-card">
+                    <p id="acceptanceDate"></p>
+                </div>
+
+                <button
+                    class="button"
+                    type="button"
+                    onclick="showCounterScreen()"
+                >
+                    Découvrir notre compteur
+                </button>
+            </div>
+        </section>
+
+        <!-- ÉCRAN 6 : COMPTEUR -->
+        <section class="screen" id="screen6">
+            <div class="content">
+                <div class="eyebrow">
+                    Notre histoire
+                </div>
+
+                <h2>
+                    Ensemble depuis ❤️
+                </h2>
+
+                <p class="small-text" id="counterStartDate"></p>
+
+                <div class="counter-grid">
+                    <div class="counter-unit">
+                        <span class="counter-number" id="days">0</span>
+                        <span class="counter-label">Jours</span>
+                    </div>
+
+                    <div class="counter-unit">
+                        <span class="counter-number" id="hours">00</span>
+                        <span class="counter-label">Heures</span>
+                    </div>
+
+                    <div class="counter-unit">
+                        <span class="counter-number" id="minutes">00</span>
+                        <span class="counter-label">Minutes</span>
+                    </div>
+
+                    <div class="counter-unit">
+                        <span class="counter-number" id="seconds">00</span>
+                        <span class="counter-label">Secondes</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <p class="highlight">
+                    Et ce n'est que le début...
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        "use strict";
+
+        const STORAGE_KEY = "enolaRelationshipStart";
+        const music = document.getElementById("music");
+        const musicButton = document.getElementById("musicButton");
+
+        let currentScreen = 1;
+        let musicStarted = false;
+        let counterInterval = null;
+
+        /*
+         * Affiche un écran précis et masque tous les autres.
+         */
+        function showScreen(screenNumber) {
+            const screens = document.querySelectorAll(".screen");
+
+            screens.forEach((screen) => {
+                screen.classList.remove("active");
+            });
+
+            const target = document.getElementById(
+                `screen${screenNumber}`
+            );
+
+            if (!target) {
+                console.error(
+                    `L'écran ${screenNumber} n'existe pas.`
+                );
+                return;
+            }
+
+            target.classList.add("active");
+            target.scrollTop = 0;
+            currentScreen = screenNumber;
+        }
+
+        /*
+         * La musique commence après le premier clic.
+         * Les navigateurs mobiles bloquent généralement
+         * le son tant que la personne n'a pas interagi.
+         */
+        async function beginExperience() {
+            showScreen(2);
+            musicButton.classList.add("visible");
+
+            try {
+                music.volume = 0.65;
+                await music.play();
+                musicStarted = true;
+                updateMusicButton();
+            } catch (error) {
+                musicStarted = false;
+                updateMusicButton();
+                console.warn(
+                    "La musique doit être activée avec le bouton ♪.",
+                    error
+                );
+            }
+        }
+
+        /*
+         * Active ou coupe la musique.
+         */
+        async function toggleMusic() {
+            if (music.paused) {
+                try {
+                    await music.play();
+                    musicStarted = true;
+                } catch (error) {
+                    console.warn(
+                        "Impossible de lancer la musique.",
+                        error
+                    );
+                }
+            } else {
+                music.pause();
+            }
+
+            updateMusicButton();
+        }
+
+        function updateMusicButton() {
+            if (music.paused) {
+                musicButton.textContent = "♪";
+                musicButton.setAttribute(
+                    "aria-label",
+                    "Activer la musique"
+                );
+                musicButton.title = "Activer la musique";
+            } else {
+                musicButton.textContent = "♫";
+                musicButton.setAttribute(
+                    "aria-label",
+                    "Couper la musique"
+                );
+                musicButton.title = "Couper la musique";
+            }
+        }
+
+        musicButton.addEventListener("click", toggleMusic);
+
+        music.addEventListener("play", updateMusicButton);
+        music.addEventListener("pause", updateMusicButton);
+
+        /*
+         * Enregistre le moment exact du premier Oui.
+         * Une fois enregistré, ce moment n'est pas remplacé.
+         */
+        function acceptProposal() {
+            let startTimestamp = readStartTimestamp();
+
+            if (!startTimestamp) {
+                startTimestamp = Date.now();
+
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    String(startTimestamp)
+                );
+            }
+
+            displayAcceptanceDate(startTimestamp);
+            showScreen(5);
+            launchConfetti();
+        }
+
+        function readStartTimestamp() {
+            const storedValue = localStorage.getItem(STORAGE_KEY);
+
+            if (!storedValue) {
+                return null;
+            }
+
+            const timestamp = Number(storedValue);
+
+            if (!Number.isFinite(timestamp) || timestamp <= 0) {
+                return null;
+            }
+
+            return timestamp;
+        }
+
+        /*
+         * Formate la date en français.
+         */
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+
+            return new Intl.DateTimeFormat("fr-FR", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            }).format(date);
+        }
+
+        function capitalizeFirstLetter(text) {
+            if (!text) {
+                return "";
+            }
+
+            return text.charAt(0).toUpperCase() + text.slice(1);
+        }
+
+        function displayAcceptanceDate(timestamp) {
+            const formattedDate = capitalizeFirstLetter(
+                formatDate(timestamp)
+            );
+
+            document.getElementById(
+                "acceptanceDate"
+            ).innerHTML =
+                `Notre histoire a officiellement commencé<br>` +
+                `<strong>${formattedDate}</strong>`;
+        }
+
+        function showCounterScreen() {
+            const startTimestamp = readStartTimestamp();
+
+            if (!startTimestamp) {
+                showScreen(1);
+                return;
+            }
+
+            const formattedDate = capitalizeFirstLetter(
+                formatDate(startTimestamp)
+            );
+
+            document.getElementById(
+                "counterStartDate"
+            ).textContent =
+                `Depuis le ${formattedDate}`;
+
+            showScreen(6);
+            startCounter();
+        }
+
+        /*
+         * Calcule le temps écoulé depuis le Oui.
+         */
+        function updateCounter() {
+            const startTimestamp = readStartTimestamp();
+
+            if (!startTimestamp) {
+                return;
+            }
+
+            const now = Date.now();
+            const difference = Math.max(
+                0,
+                now - startTimestamp
+            );
+
+            const totalSeconds = Math.floor(
+                difference / 1000
+            );
+
+            const days = Math.floor(
+                totalSeconds / 86400
+            );
+
+            const hours = Math.floor(
+                (totalSeconds % 86400) / 3600
+            );
+
+            const minutes = Math.floor(
+                (totalSeconds % 3600) / 60
+            );
+
+            const seconds = totalSeconds % 60;
+
+            document.getElementById(
+                "days"
+            ).textContent = String(days);
+
+            document.getElementById(
+                "hours"
+            ).textContent = String(hours).padStart(2, "0");
+
+            document.getElementById(
+                "minutes"
+            ).textContent = String(minutes).padStart(2, "0");
+
+            document.getElementById(
+                "seconds"
+            ).textContent = String(seconds).padStart(2, "0");
+        }
+
+        function startCounter() {
+            if (counterInterval !== null) {
+                clearInterval(counterInterval);
+            }
+
+            updateCounter();
+
+            counterInterval = window.setInterval(
+                updateCounter,
+                1000
+            );
+        }
+
+        /*
+         * Crée les petites particules dorées du fond.
+         */
+        function createBackgroundParticles() {
+            const numberOfParticles = 22;
+
+            for (
+                let index = 0;
+                index < numberOfParticles;
+                index += 1
+            ) {
+                const particle = document.createElement("span");
+
+                particle.className = "gold-particle";
+                particle.style.left =
+                    `${Math.random() * 100}vw`;
+
+                particle.style.animationDuration =
+                    `${8 + Math.random() * 12}s`;
+
+                particle.style.animationDelay =
+                    `${Math.random() * 10}s`;
+
+                particle.style.opacity =
+                    String(0.18 + Math.random() * 0.35);
+
+                document.body.appendChild(particle);
+            }
+        }
+
+        /*
+         * Confettis dessinés sur un canvas.
+         */
+        function launchConfetti() {
+            const canvas = document.getElementById(
+                "confettiCanvas"
+            );
+
+            const context = canvas.getContext("2d");
+
+            if (!context) {
+                return;
+            }
+
+            let animationFrameId = null;
+            let confettiPieces = [];
+            let startTime = null;
+
+            const colors = [
+                "#d4af37",
+                "#f2dc8c",
+                "#fff9e8",
+                "#ffffff",
+                "#b98b21"
+            ];
+
+            function resizeCanvas() {
+                const pixelRatio =
+                    window.devicePixelRatio || 1;
+
+                canvas.width =
+                    Math.floor(
+                        window.innerWidth * pixelRatio
+                    );
+
+                canvas.height =
+                    Math.floor(
+                        window.innerHeight * pixelRatio
+                    );
+
+                canvas.style.width =
+                    `${window.innerWidth}px`;
+
+                canvas.style.height =
+                    `${window.innerHeight}px`;
+
+                context.setTransform(
+                    pixelRatio,
+                    0,
+                    0,
+                    pixelRatio,
+                    0,
+                    0
+                );
+            }
+
+            resizeCanvas();
+
+            confettiPieces = Array.from(
+                { length: 170 },
+                () => ({
+                    x: Math.random() * window.innerWidth,
+                    y:
+                        -20 -
+                        Math.random() * window.innerHeight,
+                    width: 5 + Math.random() * 7,
+                    height: 7 + Math.random() * 11,
+                    color:
+                        colors[
+                            Math.floor(
+                                Math.random() * colors.length
+                            )
+                        ],
+                    speed: 2.2 + Math.random() * 4.8,
+                    drift: -1.8 + Math.random() * 3.6,
+                    rotation: Math.random() * Math.PI * 2,
+                    rotationSpeed:
+                        -0.15 + Math.random() * 0.30
+                })
+            );
+
+            function animate(timestamp) {
+                if (startTime === null) {
+                    startTime = timestamp;
+                }
+
+                const elapsed = timestamp - startTime;
+
+                context.clearRect(
+                    0,
+                    0,
+                    window.innerWidth,
+                    window.innerHeight
+                );
+
+                confettiPieces.forEach((piece) => {
+                    piece.y += piece.speed;
+                    piece.x += piece.drift;
+                    piece.rotation += piece.rotationSpeed;
+
+                    context.save();
+                    context.translate(piece.x, piece.y);
+                    context.rotate(piece.rotation);
+                    context.fillStyle = piece.color;
+
+                    context.fillRect(
+                        -piece.width / 2,
+                        -piece.height / 2,
+                        piece.width,
+                        piece.height
+                    );
+
+                    context.restore();
+                });
+
+                if (elapsed < 6000) {
+                    animationFrameId =
+                        requestAnimationFrame(animate);
+                } else {
+                    context.clearRect(
+                        0,
+                        0,
+                        window.innerWidth,
+                        window.innerHeight
+                    );
+
+                    if (animationFrameId !== null) {
+                        cancelAnimationFrame(
+                            animationFrameId
+                        );
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        /*
+         * Añadiendo ?reset=1 a la URL se borra únicamente
+         * la fecha guardada para poder hacer pruebas.
+         */
+        function handleResetParameter() {
+            const parameters = new URLSearchParams(
+                window.location.search
+            );
+
+            if (parameters.get("reset") === "1") {
+                localStorage.removeItem(STORAGE_KEY);
+
+                parameters.delete("reset");
+
+                const cleanQuery = parameters.toString();
+
+                const cleanUrl =
+                    window.location.pathname +
+                    (cleanQuery ? `?${cleanQuery}` : "") +
+                    window.location.hash;
+
+                window.history.replaceState(
+                    {},
+                    document.title,
+                    cleanUrl
+                );
+            }
+        }
+
+        function initializePage() {
+            handleResetParameter();
+            createBackgroundParticles();
+            updateMusicButton();
+
+            /*
+             * Si le Oui existe déjà dans ce navigateur,
+             * la page affiche directement le compteur.
+             */
+            const startTimestamp = readStartTimestamp();
+
+            if (startTimestamp) {
+                musicButton.classList.add("visible");
+
+                document.getElementById(
+                    "counterStartDate"
+                ).textContent =
+                    `Depuis le ${
+                        capitalizeFirstLetter(
+                            formatDate(startTimestamp)
+                        )
+                    }`;
+
+                showScreen(6);
+                startCounter();
+            }
+        }
+
+        initializePage();
+    </script>
 </body>
 </html>
