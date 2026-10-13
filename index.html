@@ -686,10 +686,10 @@
                 <button
                     class="button"
                     type="button"
-                    onclick="resetExperience()"
+                    onclick="returnToBeginning()"
                     style="margin-top: 18px;"
                 >
-                    ↺ Reiniciar desde el principio
+                    ↺ Volver a leer desde el principio
                 </button>
             </div>
         </section>
@@ -822,34 +822,10 @@
         }
 
         /*
-         * Reinicia la sorpresa para volver a verla desde el principio.
-         * También borra la fecha guardada del contador para que,
-         * al pulsar "Sí" de nuevo, se registre una nueva fecha.
+         * Permite volver a leer la sorpresa desde el principio
+         * sin borrar la fecha original ni reiniciar el contador.
          */
-        function resetExperience() {
-            const confirmed = window.confirm(
-                "¿Quieres reiniciar la sorpresa desde el principio? Se borrará la fecha guardada del contador."
-            );
-
-            if (!confirmed) {
-                return;
-            }
-
-            localStorage.removeItem(STORAGE_KEY);
-
-            if (counterInterval !== null) {
-                clearInterval(counterInterval);
-                counterInterval = null;
-            }
-
-            music.pause();
-            try {
-                music.currentTime = 0;
-            } catch (error) {
-                // Algunos navegadores pueden impedir cambiar el audio antes de cargarlo.
-            }
-
-            musicButton.classList.remove("visible");
+        function returnToBeginning() {
             showScreen(1);
         }
 
