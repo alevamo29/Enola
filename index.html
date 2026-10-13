@@ -682,6 +682,15 @@
                 <p class="highlight">
                     Et ce n'est que le début...
                 </p>
+
+                <button
+                    class="button"
+                    type="button"
+                    onclick="resetExperience()"
+                    style="margin-top: 18px;"
+                >
+                    ↺ Reiniciar desde el principio
+                </button>
             </div>
         </section>
     </main>
@@ -810,6 +819,38 @@
             displayAcceptanceDate(startTimestamp);
             showScreen(5);
             launchConfetti();
+        }
+
+        /*
+         * Reinicia la sorpresa para volver a verla desde el principio.
+         * También borra la fecha guardada del contador para que,
+         * al pulsar "Sí" de nuevo, se registre una nueva fecha.
+         */
+        function resetExperience() {
+            const confirmed = window.confirm(
+                "¿Quieres reiniciar la sorpresa desde el principio? Se borrará la fecha guardada del contador."
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            localStorage.removeItem(STORAGE_KEY);
+
+            if (counterInterval !== null) {
+                clearInterval(counterInterval);
+                counterInterval = null;
+            }
+
+            music.pause();
+            try {
+                music.currentTime = 0;
+            } catch (error) {
+                // Algunos navegadores pueden impedir cambiar el audio antes de cargarlo.
+            }
+
+            musicButton.classList.remove("visible");
+            showScreen(1);
         }
 
         function readStartTimestamp() {
