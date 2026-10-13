@@ -483,7 +483,7 @@
 
 <body>
     <audio id="music" preload="auto" loop>
-    <source src="musica.mp3" type="audio/mpeg">
+    musica.mp3
     </audio>
 
     <button
@@ -529,7 +529,7 @@
         <section class="screen" id="screen2">
             <div class="content">
                 <div class="photo-frame">
-                      <img src="Photo1.jpeg" alt="Notre photo">
+                      Photo1.jpeg
                 </div>
 
                 <p>
@@ -553,11 +553,11 @@
             <div class="content">
                 <div class="photo-pair">
                     <div class="photo-frame">
-                        <img src="Photo5.jpeg" alt="Notre photo ensemble">
+                        Photo5.jpeg
                     </div>
 
                     <div class="photo-frame">
-                        <img src="Photo4.jpeg" alt="Notre photo ensemble">
+                        Photo4.jpeg
                     </div>
                 </div>
 
@@ -617,7 +617,7 @@
         <section class="screen" id="screen5">
             <div class="content">
                 <div class="photo-frame celebration-photo">
-                    <img src="Photo3.jpeg" alt="Notre souvenir">
+                    Photo3.jpeg" alt="Notre souvenir">
                 </div>
 
                 <h2>
@@ -682,6 +682,15 @@
                 <p class="highlight">
                     Et ce n'est que le début...
                 </p>
+
+                <!-- NOUVEAU : relire l'histoire sans toucher au compteur -->
+                <button
+                    class="button"
+                    type="button"
+                    onclick="restartStory()"
+                >
+                    ↻ Relire notre histoire
+                </button>
             </div>
         </section>
     </main>
@@ -1143,6 +1152,15 @@
                     cleanUrl
                 );
             }
+        }
+
+        /*
+         * NOUVEAU : permet de relire l'histoire depuis le début
+         * sans supprimer la date du premier Oui.
+         * Le compteur continue donc à compter normalement.
+         */
+        function restartStory() {
+            showScreen(1);
         }
 
         function initializePage() {
